@@ -9,7 +9,7 @@ router.post("/displayMessages", postController.postdisplayMessages);
 router.post("/like", postController.postaddLike);
 router.post("/dislike", postController.postaddDislike);
 router.post("/comment", postController.postaddComment);
-router.post("/getReview", postcontroller.displayReview);
+router.post("/getReview", postController.displayReview);
 router.post("/updateReview", postController.postupdateReview);
 router.post("/deleteReview", postController.postdeleteReview);
 router.use(userController.error);
