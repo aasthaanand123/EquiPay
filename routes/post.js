@@ -5,5 +5,6 @@ const userController = require("../controllers/usercontroller");
 router.post("/addReview", postController.postaddReview);
 router.post("/addMessage", postController.postaddMessage);
 router.post("/addComment", postController.postaddComment);
+router.post("/displayMessages", postController.postdisplayMessages);
 router.use(userController.error);
 module.exports = router;

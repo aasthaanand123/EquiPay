@@ -25,12 +25,14 @@ module.exports.postSignUp = async (req, res, next) => {
           gender: gender,
         });
         await created.save();
-        req.flash("msg", "Sign up successful. Please login now!");
-        res.redirect("/user/auth/login");
+        // req.flash("msg", "Sign up successful. Please login now!");
+        // res.redirect("/user/auth/login");
+        res.json(created);
       });
     } else {
       req.flash("msg", "Fields not correctly specified!");
-      res.redirect("/user/auth/signup");
+      // res.redirect("/user/auth/signup");
+      res.json(false);
     }
   } catch (err) {
     req.flash("info", `${err}`);

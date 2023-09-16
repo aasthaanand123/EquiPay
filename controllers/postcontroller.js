@@ -1,20 +1,30 @@
 const user = require("../models/user");
 const review = require("../models/review");
 const comment = require("../models/comment");
+const company = require("../models/company");
+const message = require("../models/message");
+
 module.exports.postaddReview = async (req, res, next) => {
-  let { company, salary, description, rating } = req.body;
+  let { companyname, salary, description, rating } = req.body;
   let userid = req.user._id;
   try {
-    let created = await review.create({
-      userid: userid,
-      company: company,
-      salary: salary,
-      description: description,
-      rating: rating,
-    });
-    req.user.reviews.push(created._id);
-    await req.user.save();
-    res.json(created);
+    let companydetails = await company.findOne({ name: companyname });
+    if (companydetails) {
+      companydetails.reviews.push(created._id);
+      companydetails.save();
+      let created = await review.create({
+        userid: userid,
+        company: companyname,
+        salary: salary,
+        description: description,
+        rating: rating,
+      });
+      req.user.reviews.push(created._id);
+      await req.user.save();
+      res.json(created);
+    } else {
+      res.json(false);
+    }
   } catch (err) {
     req.flash("info", `${err}`);
     next();
@@ -37,12 +47,12 @@ module.exports.postaddMessage = async (req, res, next) => {
   }
 };
 module.exports.postaddComment = async (req, res, next) => {
-  let { messageid, comment } = req.body;
+  let { messageid, commentdetails } = req.body;
   let userid = req.user._id;
   try {
     let created = await comment.create({
       messageid: messageid,
-      comment: comment,
+      comment: commentdetails,
       userid: userid,
     });
     await created.save();
@@ -52,3 +62,22 @@ module.exports.postaddComment = async (req, res, next) => {
     next();
   }
 };
+module.exports.postdisplayMessages = async (req, res) => {
+  try {
+    let messages = await message.find({});
+    res.json(messages);
+  } catch {
+    req.flash("info", `${err}`);
+    next();
+  }
+};
+// module.exports.displayReview=async (req, res) => {
+//   try {
+//     let {reviewid}=
+//     let reviewdetails = await review.find({});
+//     res.json(reviewdetails);
+//   } catch {
+//     req.flash("info", `${err}`);
+//     next();
+//   }
+// };
