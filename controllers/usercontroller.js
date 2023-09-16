@@ -1,4 +1,6 @@
+const message = require("../models/message");
 const user = require("../models/user");
+const review = require("../models/review");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -34,4 +36,36 @@ module.exports.postSignUp = async (req, res, next) => {
     req.flash("info", `${err}`);
     next();
   }
+};
+module.exports.logout = function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/user/auth/login");
+  });
+};
+module.exports.postsignout = async (req, res, next) => {
+  let { username, password } = req.body;
+  try {
+    if (username == req.user.username) {
+      bcrypt.compare(password, req.user.password, async function (err, result) {
+        if (result) {
+          await review.deleteMany({ userid: req.user._id });
+          await user.deleteOne({ _id: req.user._id });
+          await message.deleteMany({ userid: req.user._id });
+          res.json(true);
+        }
+      });
+    } else {
+      res.redirect("/user/dash/profile");
+    }
+  } catch (err) {
+    req.flash("info", `${err}`);
+    next();
+  }
+};
+module.exports.error = (req, res) => {
+  // how to manage errors?
+  res.redirect("/user/dash/profile");
 };
