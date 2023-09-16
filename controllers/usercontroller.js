@@ -4,22 +4,25 @@ const saltRounds = 10;
 
 module.exports.postSignUp = async (req, res, next) => {
   try {
-    let { name, age, email, username, password } = req.body;
+    let { name, age, email, username, password, gender } = req.body;
     if (
       name.length > 0 &&
       age != null &&
+      gender != null &&
       email != "" &&
       username != "" &&
       password != ""
     ) {
       bcrypt.hash(password, saltRounds, async function (err, hash) {
-        await user.create({
+        let created = await user.create({
           name: name,
           age: age,
           email: email,
           username: username,
           password: hash,
+          gender: gender,
         });
+        await created.save();
         req.flash("msg", "Sign up successful. Please login now!");
         res.redirect("/user/auth/login");
       });
