@@ -16,7 +16,9 @@ function Salary() {
       ></input>
       <div className="companies">
         {softwareCompanies
-          .filter((company) => company.toLowerCase().includes(query))
+          .filter((company) =>
+            company.toLowerCase().includes(query.toLowerCase())
+          )
           .map((company) => {
             return (
               <div className="company" key={softwareCompanies.indexOf(company)}>

@@ -2,3 +2,34 @@
   font-family: "Roboto", sans-serif;
   margin-left: 15px;
 }
+.comp-nav {
+  padding: 8px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-evenly;
+  background-color: whitesmoke;
+  margin: 0;
+}
+.comp-nav > button {
+  padding: 13px;
+  font-size: 25px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  border: none;
+  background-color: whitesmoke;
+  position: relative;
+}
+.comp-nav > button:after {
+  content: "";
+  position: absolute;
+  background-color: #0076ff;
+  color: white;
+  height: 3px;
+  left: 0;
+  width: 0;
+  bottom: -5px;
+  transition: 0.3s;
+}
+.comp-nav > button:hover:after {
+  width: 100%;
+}

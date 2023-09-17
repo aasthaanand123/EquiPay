@@ -1,0 +1,48 @@
+.salary-notice {
+  font-family: "Roboto", sans-serif;
+  background-color: whitesmoke;
+  margin: 30px;
+  padding: 15px;
+  border-radius: 20px;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 25px;
+}
+.sal-form {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  background-color: whitesmoke;
+  /* margin: 100px; */
+  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
+  border-radius: 30px;
+  width: 700px;
+  margin: 0 auto;
+  /* color: gray; */
+}
+.sal-field > input,
+.sal-field > select {
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+}
+.sal-field {
+  padding: 10px;
+}
+.sal-field > input[type="radio"] {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  padding: 3px;
+  background-clip: content-box;
+  border: 2px solid #060c3b;
+  border-radius: 50%;
+  margin-right: 5px;
+  margin-left: 15px;
+}
