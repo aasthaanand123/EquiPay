@@ -216,8 +216,62 @@ module.exports.getchartdetails = async (req, res, next) => {
         };
       })
     );
-    if (mapped) {
-      res.json(mapped);
+    
+    //grouping the elemnets by there designation
+    const groupDataBYJob = mapped.reduce((acc,employee)=>{
+      if(!acc[employee.designation]){
+        acc[employee.designation] = [];
+      }
+      acc[employee.designation].push(employee);
+      return acc;
+    },{});
+
+    //grouping in each job by gender 
+    const averageSalaryJobandGender = {};
+    for(const[job,employees] of Object.entries(groupDataBYJob)){
+      averageSalaryJobandGender[job] = employees.reduce((acc,emp)=>{
+        if(!acc[emp.gender]){
+          acc[emp.gender] = {totalSalary:0, count:0};
+        }
+        acc[emp.gender].totalSalary += emp.salary;
+        acc[emp.gender].count += 1;
+        return acc;
+      },{});
+    }
+
+    //calculate the average salary
+    for(const [job,data] of Object.entries(averageSalaryJobandGender)){
+      for(const [gender, stats] of Object.entries(data)){
+        averageSalaryJobandGender[job][gender].averageSalary = stats.totalSalary / stats.count;
+      }
+    }
+
+    console.log(averageSalaryJobandGender);
+
+    //calculate the pay gap
+    const payGapByJob = {};
+    for(const [job,data] of Object.entries(averageSalaryJobandGender)){
+      payGapByJob[job] = {};
+      const genders = Object.keys(data);
+      for (let i = 0; i < genders.length; i++) {
+        for (let j = i + 1; j < genders.length; j++) {
+          const gender1 = genders[i];
+          const gender2 = genders[j];
+    
+          payGapByJob[job][`${gender1}-${gender2}`] = 
+            ((data[gender1].averageSalary - data[gender2].averageSalary) / data[gender1].averageSalary) * 100;
+        }
+      }
+    }
+
+    const responsePayload  ={
+      employeeData: mapped,
+      perJobGenderData: averageSalaryJobandGender,
+      payGap: payGapByJob,
+
+    }
+    if (mapped.length > 0) {
+      res.json(responsePayload);
     } else {
       res.json(false);
     }
