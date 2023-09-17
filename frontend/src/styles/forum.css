@@ -1,0 +1,44 @@
+.postbox {
+  background-color: rgb(240, 240, 240);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+.posts {
+  flex: 0.6;
+  margin: 5px 20px;
+}
+.postContainer {
+  background-color: white;
+  padding: 10px;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 70%;
+  margin: 0 auto;
+}
+.post {
+  border: 3px solid lightgray;
+  border-radius: 30px;
+  display: flex;
+  padding: 10px;
+  color: gray;
+  padding-left: 15px;
+}
+.post > form {
+  display: flex;
+  width: 100%;
+}
+.post > form > input {
+  border: none;
+  flex: 1;
+  margin-left: 10px;
+  /* font-weight: 600; */
+  outline-width: 0;
+  font-size: large;
+}
+.post > form > button {
+  display: none;
+}

@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap");
+body {
+  margin: 0;
+  font-size: calc(15px + 0.390625vw);
+}
+.navbar {
+  background-color: #0076ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 1.2rem;
+}
+.navbar ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+.navbar .link {
+  color: #000000;
+  font-family: "Roboto", sans-serif;
+  text-decoration: none;
+  font-size: 1.5rem;
+  display: flex;
+  padding: 1rem;
+  font-weight: 500;
+}
+.navbar .link:hover {
+  background-color: #4c9efb;
+}
+.site-name {
+  color: #f28500;
+  font-family: "Fjalla One", sans-serif;
+  font-size: 3rem;
+  text-decoration: none;
+}
+.navbar button {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  background-color: #d8e5f1;
+  border: 0;
+  border-radius: 15px;
+  width: 5%;
+  padding: 0.25rem;
+}

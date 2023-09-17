@@ -1,0 +1,37 @@
+.postMessage {
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  font-family: "Roboto", sans-serif;
+  margin-top: 10px;
+  width: 70%;
+  margin-left: 14%;
+}
+.postHeader {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.postInfo {
+  margin-left: 10px;
+  margin-top: 0;
+}
+.postInfo > h3 {
+  margin: 1px;
+}
+.postInfo > p {
+  font-size: 18px;
+  color: gray;
+  margin-top: 1px;
+}
+.postBody {
+  padding-left: 10px;
+  overflow-wrap: anywhere;
+}
+.postButtons {
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+}
