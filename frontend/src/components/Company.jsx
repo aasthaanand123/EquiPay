@@ -12,17 +12,29 @@ function Company() {
     <div className="comp">
       <div className="comp-nav">
         <button>
-          <Link to="/company/charts">
+          <Link
+            to="/company/charts"
+            state={{ company: state.state.company }}
+            style={{ textDecoration: "none", color: "black" }}
+          >
             Charts <InsightsOutlinedIcon />
           </Link>
         </button>
         <button>
-          <Link to="/company/reviews">
+          <Link
+            to="/company/reviews"
+            state={{ company: state.state.company }}
+            style={{ textDecoration: "none", color: "black" }}
+          >
             Reviews <ReviewsOutlinedIcon />
           </Link>
         </button>
         <button>
-          <Link to="/company/postSalary">
+          <Link
+            to="/company/postSalary"
+            state={{ company: state.state.company }}
+            style={{ textDecoration: "none", color: "black" }}
+          >
             Post salary <RequestQuoteOutlinedIcon />
           </Link>
         </button>
