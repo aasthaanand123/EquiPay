@@ -14,7 +14,6 @@ import SalaryForm from "./components/SalaryForm";
 
 function App() {
   const [count, setCount] = useState(0);
-
   return (
     <>
       <Navbar />
