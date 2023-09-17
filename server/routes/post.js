@@ -12,5 +12,6 @@ router.post("/comment", postController.postaddComment);
 router.post("/getReview", postController.displayReview);
 router.post("/updateReview", postController.postupdateReview);
 router.post("/deleteReview", postController.postdeleteReview);
+post.get("/chartCompany", postController.getchartdetails);
 router.use(userController.error);
 module.exports = router;

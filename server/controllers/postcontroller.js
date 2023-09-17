@@ -3,22 +3,22 @@ const review = require("../models/review");
 const comment = require("../models/comment");
 const company = require("../models/company");
 const message = require("../models/message");
-
 module.exports.postaddReview = async (req, res, next) => {
-  let { companyname, salary, description, rating } = req.body;
+  let { companyname, salary, description, rating, designation } = req.body;
   let userid = req.user._id;
   try {
     let companydetails = await company.findOne({ name: companyname });
+    let created = await review.create({
+      userid: userid,
+      company: companyname,
+      salary: salary,
+      description: description,
+      rating: rating,
+      designation: designation,
+    });
     if (companydetails) {
       companydetails.reviews.push(created._id);
       companydetails.save();
-      let created = await review.create({
-        userid: userid,
-        company: companyname,
-        salary: salary,
-        description: description,
-        rating: rating,
-      });
       req.user.reviews.push(created._id);
       await req.user.save();
       res.json(created);
@@ -75,7 +75,9 @@ module.exports.postdisplayMessages = async (req, res) => {
 module.exports.displayReview = async (req, res) => {
   try {
     let { reviewid } = req.body;
-    let reviewdetails = await review.findOne({ _id: reviewid });
+    let reviewdetails = await review
+      .findOne({ _id: reviewid })
+      .populate({ path: "company" });
     res.json(reviewdetails);
   } catch {
     req.flash("info", `${err}`);
@@ -193,6 +195,32 @@ module.exports.postdeleteReview = async (req, res, next) => {
     await req.user.save();
     let reviewshow = await review.find({ userid: req.user._id });
     res.json(reviewshow);
+  } catch (err) {
+    req.flash("info", `${err}`);
+    next();
+  }
+};
+module.exports.getchartdetails = async (req, res, next) => {
+  let { companyname } = req.query;
+  try {
+    let companydetails = await company.findOne({ name: companyname });
+    let workers = await user.find({ companyid: companydetails._id });
+
+    let mapped = await Promise.all(
+      workers.map(async (worker) => {
+        let review = await review.findOne({ userid: worker._id });
+        return {
+          gender: worker.gender,
+          salary: review.salary,
+          designation: review.designation,
+        };
+      })
+    );
+    if (mapped) {
+      res.json(mapped);
+    } else {
+      res.json(false);
+    }
   } catch (err) {
     req.flash("info", `${err}`);
     next();
