@@ -25,11 +25,13 @@
   flex: 1 0 21%;
   text-align: center;
   border-radius: 15px;
+  transition: transform 0.5s;
 }
 .companies > div:hover {
   background-color: lightgray;
   /* color: white; */
   cursor: pointer;
+  transform: translateY(-5px);
 }
 .companies > .company > h3 {
   font-weight: 450;

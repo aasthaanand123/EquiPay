@@ -8,6 +8,9 @@ import Trivia from "./components/Trivia";
 import SignUp from "./components/SignUp";
 import Company from "./components/Company";
 import Signin from "./components/Signin";
+import Reviews from "./components/Reviews";
+import Charts from "./components/Charts";
+import SalaryForm from "./components/SalaryForm";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +27,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/company" element={<Company />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="/company/charts" element={<Charts />} />
+          <Route path="/company/reviews" element={<Reviews />} />
+          <Route path="/company/postSalary" element={<SalaryForm />} />
         </Routes>
       </div>
     </>
