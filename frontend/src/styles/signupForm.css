@@ -7,7 +7,7 @@
   align-items: center;
   height: 90vh;
 }
-form {
+.card .formInp form {
   background-color: whitesmoke;
   padding: 60px;
   border-radius: 10px;
