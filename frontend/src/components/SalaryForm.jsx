@@ -83,7 +83,7 @@ const SalaryForm = () => {
             <select name="currency" onChange={onChange}>
               {Currency.map((curr) => {
                 return (
-                  <option value={curr.code}>
+                  <option value={curr.code} key={Currency.indexOf(curr)}>
                     {curr.name + " (" + curr.code + ")"}
                   </option>
                 );
