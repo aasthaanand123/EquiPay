@@ -9,17 +9,17 @@
 }
 .card .formInp form {
   background-color: whitesmoke;
-  padding: 60px;
+  padding: 40px;
   border-radius: 10px;
-  margin: 10px;
-  width: 500px;
+  margin: 5px;
+  width: 600px;
 }
 form h2 {
   color: #f28500;
   text-align: center;
 }
 form .input {
-  margin: 20px;
+  margin: 10px;
 }
 form p {
   text-align: center;
@@ -31,7 +31,7 @@ form p {
   align-items: center;
 }
 .input > input {
-  padding: 15px;
+  padding: 13px;
   margin: 10px 0px;
   display: flex;
   flex-direction: column;

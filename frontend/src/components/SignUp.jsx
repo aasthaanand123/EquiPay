@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import "../styles/signupForm.css";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
@@ -17,14 +19,31 @@ function SignUp() {
     { value: "Prefer not to say", label: "Prefer not to say" },
   ];
   const [values, setValues] = useState({
+    name: "",
+    age: "",
+    gender: "",
     email: "",
-    pass: "",
-    confirmPass: "",
-    gender: [],
+    username: "",
+    password: "",
   });
+
   const animatedComponents = makeAnimated();
+  const createUrl = (r) => {
+    return `http://localhost:6474/user/${r}`;
+  };
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    axios
+      .post(createUrl("auth/signup"), values)
+      .then((response) => {
+        console.log(response.data);
+        navigate("/signin");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   const onChange = (e) => {
     const value =
@@ -32,13 +51,14 @@ function SignUp() {
     setValues({ ...values, [e.target.name]: value });
   };
   const handleGender = (selectedOption) => {
-    setValues({ ...values, ["gender"]: selectedOption });
+    const gender = selectedOption.map((option) => option.label).join(", ");
+    setValues({ ...values, gender });
   };
   console.log(values);
   return (
     <div className="card">
       <div className="formInp">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div className="formHead">
             <h2>Sign up now</h2>
             <p>
@@ -54,6 +74,24 @@ function SignUp() {
               onChange={onChange}
             ></input>
           </div>
+          <div className="input">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Your full name"
+              onChange={onChange}
+            />
+          </div>
+          <div className="input">
+            <label>Age:</label>
+            <input
+              type="number"
+              name="age"
+              placeholder="Your age"
+              onChange={onChange}
+            />
+          </div>
           <div className="gender-input">
             <label>
               Select your gender
@@ -61,9 +99,9 @@ function SignUp() {
                 text={
                   "We ask for this field because it helps us to provide you with an accurate representation of pay provided in companies for each gender should you choose to reveal your pay."
                 }
-                children={<HelpOutlineOutlinedIcon />}
-              />{" "}
-              :
+              >
+                <HelpOutlineOutlinedIcon />
+              </Tooltip>
             </label>
 
             <Select
@@ -77,23 +115,24 @@ function SignUp() {
             />
           </div>
           <div className="input">
-            <label>Enter a password:</label>
+            <label>Username:</label>
             <input
-              type="password"
-              name="pass"
-              placeholder="Password"
+              type="text"
+              name="username"
+              placeholder="Your username"
               onChange={onChange}
-            ></input>
+            />
           </div>
           <div className="input">
-            <label>Confirm your password:</label>
+            <label>Password:</label>
             <input
               type="password"
-              name="confirmPass"
-              placeholder="Confirm Password"
+              name="password"
+              placeholder="Your password"
               onChange={onChange}
-            ></input>
+            />
           </div>
+
           <button type="submit">Submit</button>
         </form>
       </div>
