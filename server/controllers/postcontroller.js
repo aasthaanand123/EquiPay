@@ -84,7 +84,21 @@ module.exports.displayReview = async (req, res) => {
     next();
   }
 };
-
+module.exports.getdisplayReview = async (req, res, next) => {
+  let { companyname } = req.query;
+  try {
+    let companydetails = await company.findOne({ name: companyname });
+    if (companydetails) {
+      let reviewdetails = await review.find({ companyid: companydetails._id });
+      res.json(reviewdetails);
+    } else {
+      res.json([]);
+    }
+  } catch (err) {
+    req.flash("info", `${err}`);
+    next();
+  }
+};
 module.exports.postaddLike = async (req, res, next) => {
   let { messageid } = req.body;
   const userId = new ObjectId(req.user._id);
@@ -206,20 +220,25 @@ module.exports.getchartdetails = async (req, res, next) => {
     let companydetails = await company.findOne({ name: companyname });
     let workers = await user.find({ companyid: companydetails._id });
 
-    let mapped = await Promise.all(
-      workers.map(async (worker) => {
-        let review = await review.findOne({ userid: worker._id });
-        return {
-          gender: worker.gender,
-          salary: review.salary,
-          designation: review.designation,
-        };
-      })
-    );
-    if (mapped) {
-      res.json(mapped);
+    if (!companydetails) {
+      let newcompany = await company.create({ name: companyname });
+      newcompany.save();
     } else {
-      res.json(false);
+      let mapped = await Promise.all(
+        workers.map(async (worker) => {
+          let review = await review.findOne({ userid: worker._id });
+          return {
+            gender: worker.gender,
+            salary: review.salary,
+            designation: review.designation,
+          };
+        })
+      );
+      if (mapped) {
+        res.json(mapped);
+      } else {
+        res.json(false);
+      }
     }
   } catch (err) {
     req.flash("info", `${err}`);
