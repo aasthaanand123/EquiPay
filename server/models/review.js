@@ -12,7 +12,10 @@ const reviewSchema = new Schema({
     name: String,
     required: true,
   },
-
+  designation: {
+    type: String,
+    required: true,
+  },
   salary: {
     type: Number,
     required: true,

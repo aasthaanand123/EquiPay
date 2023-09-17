@@ -3,22 +3,22 @@ const review = require("../models/review");
 const comment = require("../models/comment");
 const company = require("../models/company");
 const message = require("../models/message");
-
 module.exports.postaddReview = async (req, res, next) => {
-  let { companyname, salary, description, rating } = req.body;
+  let { companyname, salary, description, rating, designation } = req.body;
   let userid = req.user._id;
   try {
     let companydetails = await company.findOne({ name: companyname });
+    let created = await review.create({
+      userid: userid,
+      company: companyname,
+      salary: salary,
+      description: description,
+      rating: rating,
+      designation: designation,
+    });
     if (companydetails) {
       companydetails.reviews.push(created._id);
       companydetails.save();
-      let created = await review.create({
-        userid: userid,
-        company: companyname,
-        salary: salary,
-        description: description,
-        rating: rating,
-      });
       req.user.reviews.push(created._id);
       await req.user.save();
       res.json(created);
@@ -75,7 +75,9 @@ module.exports.postdisplayMessages = async (req, res) => {
 module.exports.displayReview = async (req, res) => {
   try {
     let { reviewid } = req.body;
-    let reviewdetails = await review.findOne({ _id: reviewid });
+    let reviewdetails = await review
+      .findOne({ _id: reviewid })
+      .populate({ path: "company" });
     res.json(reviewdetails);
   } catch {
     req.flash("info", `${err}`);
@@ -193,6 +195,86 @@ module.exports.postdeleteReview = async (req, res, next) => {
     await req.user.save();
     let reviewshow = await review.find({ userid: req.user._id });
     res.json(reviewshow);
+  } catch (err) {
+    req.flash("info", `${err}`);
+    next();
+  }
+};
+module.exports.getchartdetails = async (req, res, next) => {
+  let { companyname } = req.query;
+  try {
+    let companydetails = await company.findOne({ name: companyname });
+    let workers = await user.find({ companyid: companydetails._id });
+
+    let mapped = await Promise.all(
+      workers.map(async (worker) => {
+        let review = await review.findOne({ userid: worker._id });
+        return {
+          gender: worker.gender,
+          salary: review.salary,
+          designation: review.designation,
+        };
+      })
+    );
+    
+    //grouping the elemnets by there designation
+    const groupDataBYJob = mapped.reduce((acc,employee)=>{
+      if(!acc[employee.designation]){
+        acc[employee.designation] = [];
+      }
+      acc[employee.designation].push(employee);
+      return acc;
+    },{});
+
+    //grouping in each job by gender 
+    const averageSalaryJobandGender = {};
+    for(const[job,employees] of Object.entries(groupDataBYJob)){
+      averageSalaryJobandGender[job] = employees.reduce((acc,emp)=>{
+        if(!acc[emp.gender]){
+          acc[emp.gender] = {totalSalary:0, count:0};
+        }
+        acc[emp.gender].totalSalary += emp.salary;
+        acc[emp.gender].count += 1;
+        return acc;
+      },{});
+    }
+
+    //calculate the average salary
+    for(const [job,data] of Object.entries(averageSalaryJobandGender)){
+      for(const [gender, stats] of Object.entries(data)){
+        averageSalaryJobandGender[job][gender].averageSalary = stats.totalSalary / stats.count;
+      }
+    }
+
+    console.log(averageSalaryJobandGender);
+
+    //calculate the pay gap
+    const payGapByJob = {};
+    for(const [job,data] of Object.entries(averageSalaryJobandGender)){
+      payGapByJob[job] = {};
+      const genders = Object.keys(data);
+      for (let i = 0; i < genders.length; i++) {
+        for (let j = i + 1; j < genders.length; j++) {
+          const gender1 = genders[i];
+          const gender2 = genders[j];
+    
+          payGapByJob[job][`${gender1}-${gender2}`] = 
+            ((data[gender1].averageSalary - data[gender2].averageSalary) / data[gender1].averageSalary) * 100;
+        }
+      }
+    }
+
+    const responsePayload  ={
+      employeeData: mapped,
+      perJobGenderData: averageSalaryJobandGender,
+      payGap: payGapByJob,
+
+    }
+    if (mapped.length > 0) {
+      res.json(responsePayload);
+    } else {
+      res.json(false);
+    }
   } catch (err) {
     req.flash("info", `${err}`);
     next();
